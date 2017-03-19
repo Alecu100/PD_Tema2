@@ -1,8 +1,9 @@
 ﻿using System.Collections.Specialized;
 
-namespace CinemaRest.Controllers {
-    abstract class BaseController 
+namespace CinemaRest.Controllers
+{
+    public abstract class BaseController
     {
-        public abstract string Parse (string method, NameValueCollection paramters);
+        public abstract string Parse(string method, NameValueCollection paramters);
     }
 }
