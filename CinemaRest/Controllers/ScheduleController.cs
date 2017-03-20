@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
-namespace CinemaRest.Controllers 
+namespace CinemaRest.Controllers
 {
-    class ScheduleController : BaseController
+    public class ScheduleController : Controller
     {
-        public override string Parse (string method, NameValueCollection paramters) 
+        public ScheduleController(HttpListenerContext context) : base(context)
         {
-            return "HELLO SCHEDULE";
         }
     }
 }

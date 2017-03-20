@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using CinemaRest.Controllers;
 
 namespace CinemaRest.Routing
 {
     public class Route : List<RouteSegment>
     {
-        public RouteControllerMatchResult MatchAgainstController(string relativeUrl, BaseController controller)
+        public RouteControllerMatchResult MatchAgainstController(Type controller, string relativeUrl)
         {
             var segments = relativeUrl.Split('\\', '/');
 
@@ -39,7 +38,7 @@ namespace CinemaRest.Routing
                 }
                 else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Controller)
                 {
-                    var controllerName = controller.GetType().Name.ToLower();
+                    var controllerName = controller.Name.ToLower();
 
                     var controllerNameToCompare = currentRouteSegment.Name ?? segments[i];
 
@@ -55,7 +54,7 @@ namespace CinemaRest.Routing
                 }
                 else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Action)
                 {
-                    var methodInfos = controller.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic);
+                    var methodInfos = controller.GetMethods(BindingFlags.Public | BindingFlags.NonPublic);
 
                     var methodName = currentRouteSegment.Name ?? segments[i];
 

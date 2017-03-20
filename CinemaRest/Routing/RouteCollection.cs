@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using CinemaRest.Controllers;
 
 namespace CinemaRest.Routing
 {
@@ -11,6 +13,19 @@ namespace CinemaRest.Routing
             Add(route);
 
             return route;
+        }
+
+        public RouteControllerMatchResult MatchController(Type controller, string relativeUrl)
+        {
+            foreach (var route in this)
+            {
+                var routeControllerMatchResult = route.MatchAgainstController(relativeUrl, controller);
+
+                if (routeControllerMatchResult.IsMatch)
+                    return routeControllerMatchResult;
+            }
+
+            return new RouteControllerMatchResult {IsMatch = false};
         }
     }
 }

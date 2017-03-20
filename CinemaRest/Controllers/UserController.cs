@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
-namespace CinemaRest.Controllers 
+namespace CinemaRest.Controllers
 {
-    class UserController : BaseController 
+    public class UserController : Controller
     {
-        public override string Parse (string method, NameValueCollection paramters) 
+        public UserController(HttpListenerContext context) : base(context)
         {
-            return "HELLO USERS";
         }
     }
 }
