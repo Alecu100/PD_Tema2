@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace CinemaRest.Routing
 {
@@ -6,7 +7,7 @@ namespace CinemaRest.Routing
     {
         public bool IsMatch { get; set; }
 
-        public string Method { get; set; }
+        public MethodInfo Method { get; set; }
 
         public List<RouteControllerMatchParameter> MethodParameters { get; set; } =
             new List<RouteControllerMatchParameter>();

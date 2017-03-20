@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using CinemaRest.Controllers;
 
 namespace CinemaRest.Routing
@@ -39,9 +39,14 @@ namespace CinemaRest.Routing
                 }
                 else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Controller)
                 {
-                    var controllerName = controller.GetType().Name;
+                    var controllerName = controller.GetType().Name.ToLower();
 
-                    if (string.Compare(currentRouteSegment.Name, controllerName,
+                    var controllerNameToCompare = currentRouteSegment.Name ?? segments[i];
+
+                    if (controllerName.EndsWith("controller", StringComparison.InvariantCultureIgnoreCase))
+                        controllerName = controllerName.TrimEnd("controller".ToCharArray());
+
+                    if (string.Compare(controllerNameToCompare, controllerName,
                             StringComparison.InvariantCultureIgnoreCase) != 0)
                     {
                         controllerMatchResult.IsMatch = false;
@@ -52,18 +57,60 @@ namespace CinemaRest.Routing
                 {
                     var methodInfos = controller.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic);
 
+                    var methodName = currentRouteSegment.Name ?? segments[i];
+
                     foreach (var methodInfo in methodInfos)
-                        if (string.Compare(methodInfo.Name, segments[i], StringComparison.InvariantCultureIgnoreCase) ==
+                        if (string.Compare(methodInfo.Name, methodName, StringComparison.InvariantCultureIgnoreCase) ==
                             0)
                             foundMethods.Add(methodInfo);
-                } else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Ignore)
+                }
+                else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Ignore)
                 {
-                    continue;
-                } else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Parameter)
+                }
+                else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Parameter)
                 {
-                    
+                    controllerMatchResult.MethodParameters.Add(new RouteControllerMatchParameter
+                    {
+                        Name = currentRouteSegment.Name,
+                        Value = segments[i]
+                    });
                 }
             }
+
+            foreach (var foundMethod in foundMethods)
+            {
+                var parameterInfos = foundMethod.GetParameters();
+
+                if (parameterInfos.Length != controllerMatchResult.MethodParameters.Count)
+                    continue;
+
+                var hasAllParameters = true;
+
+                foreach (var parameterInfo in parameterInfos)
+                    if (
+                        controllerMatchResult.MethodParameters.All(
+                            methodParameter =>
+                                string.Compare(methodParameter.Name, parameterInfo.Name,
+                                    StringComparison.InvariantCultureIgnoreCase) != 0))
+                    {
+                        hasAllParameters = false;
+                        break;
+                    }
+
+                if (hasAllParameters)
+                {
+                    controllerMatchResult.Method = foundMethod;
+                    break;
+                }
+            }
+
+            if (controllerMatchResult.Method == null)
+            {
+                controllerMatchResult.IsMatch = false;
+                return controllerMatchResult;
+            }
+
+            controllerMatchResult.IsMatch = true;
 
             return controllerMatchResult;
         }
