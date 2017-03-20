@@ -19,7 +19,7 @@ namespace CinemaRest.Routing
         {
             foreach (var route in this)
             {
-                var routeControllerMatchResult = route.MatchAgainstController(relativeUrl, controller);
+                var routeControllerMatchResult = route.MatchAgainstController(controller, relativeUrl);
 
                 if (routeControllerMatchResult.IsMatch)
                     return routeControllerMatchResult;

@@ -18,6 +18,8 @@ namespace CinemaRest.Server
         {
             InitializeControllers();
 
+            InitializeRoutes();
+
             var web = new HttpListener();
 
             web.Prefixes.Add(Constants.HostUrl);
@@ -36,6 +38,10 @@ namespace CinemaRest.Server
                 WriteDefaultError(context);
             }
             web.Stop();
+        }
+
+        private void InitializeRoutes()
+        {
         }
 
         private static void WriteDefaultError(HttpListenerContext context)
