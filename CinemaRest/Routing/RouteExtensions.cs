@@ -37,6 +37,11 @@
             return route;
         }
 
-        public static Route 
+        public static Route AddParameter(this Route route, string parameterName)
+        {
+            route.Add(new RouteSegment {Kind = RouteSegmentMatcherKinds.Parameter, Name = parameterName});
+
+            return route;
+        }
     }
 }
