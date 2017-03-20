@@ -1,68 +1,70 @@
-﻿using CinemaRest.Controllers;
-using CinemaRest.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
+using System.Text;
+using CinemaRest.Controllers;
+using CinemaRest.Helpers;
+using CinemaRest.Routing;
 
-namespace CinemaRest.Server 
- {
-    class MasterServer 
+namespace CinemaRest.Server
+{
+    internal class MasterServer
     {
-        private UserController userController = new UserController ();
-        private MovieController movieController = new MovieController ();
-        private RoomController roomController = new RoomController ();
-        private ScheduleController scheduleController = new ScheduleController ();
-        private BookingController bookingController = new BookingController ();
-        private Dictionary <string, BaseController> controllers = new Dictionary <string, BaseController> ();
+        private readonly BookingController bookingController = new BookingController();
+        private readonly Dictionary<string, BaseController> controllers = new Dictionary<string, BaseController>();
+        private readonly MovieController movieController = new MovieController();
+        private readonly RoomController roomController = new RoomController();
+        private RouteCollection routes = new RouteCollection();
+        private readonly ScheduleController scheduleController = new ScheduleController();
+        private readonly UserController userController = new UserController();
 
-        public void Start () 
+        public void Start()
         {
-            InitializeControllers ();
+            InitializeControllers();
 
-            var web = new HttpListener ();
+            var web = new HttpListener();
 
-            web.Prefixes.Add (Constants.HostUrl);
+            web.Prefixes.Add(Constants.HostUrl);
 
-            Console.WriteLine ("Listening..");
+            Console.WriteLine("Listening..");
 
-            web.Start ();
-            while (true) {
-                var context = web.GetContext ();
-                Console.WriteLine ("Rq: " + context.Request.Url);
+            web.Start();
+            while (true)
+            {
+                var context = web.GetContext();
+                Console.WriteLine("Rq: " + context.Request.Url);
 
-                string controller = string.Empty;
-                string action = string.Empty;
+                var controller = string.Empty;
+                var action = string.Empty;
                 NameValueCollection parameters;
-                UrlResolver.ResolveUrl (context.Request.Url, out controller, out action, out parameters);
+                UrlResolver.ResolveUrl(context.Request.Url, out controller, out action, out parameters);
 
                 var response = context.Response;
-                string responseString = "Error happened";
+                var responseString = "Error happened";
 
-                if (controller != string.Empty && controllers.ContainsKey (controller)) {
-                    responseString = controllers [controller].Parse (action, parameters);
-                }
-                
-                var buffer = System.Text.Encoding.UTF8.GetBytes (responseString);
+                if (controller != string.Empty && controllers.ContainsKey(controller))
+                    responseString = controllers[controller].Parse(action, parameters);
+
+                var buffer = Encoding.UTF8.GetBytes(responseString);
                 response.ContentLength64 = buffer.Length;
 
                 var output = response.OutputStream;
-                output.Write (buffer, 0, buffer.Length);
+                output.Write(buffer, 0, buffer.Length);
 
-                Console.WriteLine (output);
-                output.Close ();
-
+                Console.WriteLine(output);
+                output.Close();
             }
-            web.Stop ();
+            web.Stop();
         }
 
-        private void InitializeControllers () 
+        private void InitializeControllers()
         {
-            controllers.Add (Constants.Controllers.User, userController);
-            controllers.Add (Constants.Controllers.Movie, movieController);
-            controllers.Add (Constants.Controllers.Room, roomController);
-            controllers.Add (Constants.Controllers.Schedule, scheduleController);
-            controllers.Add (Constants.Controllers.Booking, bookingController);
+            controllers.Add(Constants.Controllers.User, userController);
+            controllers.Add(Constants.Controllers.Movie, movieController);
+            controllers.Add(Constants.Controllers.Room, roomController);
+            controllers.Add(Constants.Controllers.Schedule, scheduleController);
+            controllers.Add(Constants.Controllers.Booking, bookingController);
         }
     }
 }

@@ -66,8 +66,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\Route.cs" />
+    <Compile Include="Routing\RouteCollection.cs" />
     <Compile Include="Routing\RouteControllerMatchParameter.cs" />
     <Compile Include="Routing\RouteControllerMatchResult.cs" />
+    <Compile Include="Routing\RouteExtensions.cs" />
     <Compile Include="Routing\RouteSegmentMatcherKinds.cs" />
     <Compile Include="Routing\RouteSegment.cs" />
     <Compile Include="Server\MasterServer.cs" />
