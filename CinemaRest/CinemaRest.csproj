@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\MovieController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
@@ -66,6 +66,13 @@
     <Compile Include="Persistence\UserPersistence.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routing\Route.cs" />
+    <Compile Include="Routing\RouteCollection.cs" />
+    <Compile Include="Routing\RouteControllerMatchParameter.cs" />
+    <Compile Include="Routing\RouteControllerMatchResult.cs" />
+    <Compile Include="Routing\RouteExtensions.cs" />
+    <Compile Include="Routing\RouteSegmentMatcherKinds.cs" />
+    <Compile Include="Routing\RouteSegment.cs" />
     <Compile Include="Server\MasterServer.cs" />
   </ItemGroup>
   <ItemGroup>

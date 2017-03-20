@@ -1,68 +1,108 @@
-﻿using CinemaRest.Controllers;
-using CinemaRest.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Net;
+using System.Reflection;
+using System.Text;
+using CinemaRest.Controllers;
+using CinemaRest.Helpers;
+using CinemaRest.Routing;
 
-namespace CinemaRest.Server 
- {
-    class MasterServer 
+namespace CinemaRest.Server
+{
+    internal class MasterServer
     {
-        private UserController userController = new UserController ();
-        private MovieController movieController = new MovieController ();
-        private RoomController roomController = new RoomController ();
-        private ScheduleController scheduleController = new ScheduleController ();
-        private BookingController bookingController = new BookingController ();
-        private Dictionary <string, BaseController> controllers = new Dictionary <string, BaseController> ();
+        private readonly List<Type> _controllers = new List<Type>();
+        private readonly RouteCollection _routes = new RouteCollection();
 
-        public void Start () 
+        public void Start()
         {
-            InitializeControllers ();
+            InitializeControllers();
 
-            var web = new HttpListener ();
+            var web = new HttpListener();
 
-            web.Prefixes.Add (Constants.HostUrl);
+            web.Prefixes.Add(Constants.HostUrl);
 
-            Console.WriteLine ("Listening..");
+            Console.WriteLine("Listening..");
 
-            web.Start ();
-            while (true) {
-                var context = web.GetContext ();
-                Console.WriteLine ("Rq: " + context.Request.Url);
+            web.Start();
+            while (true)
+            {
+                var context = web.GetContext();
+                Console.WriteLine("Rq: " + context.Request.Url);
 
-                string controller = string.Empty;
-                string action = string.Empty;
-                NameValueCollection parameters;
-                UrlResolver.ResolveUrl (context.Request.Url, out controller, out action, out parameters);
+                if (TryToHandleRequestByController(context))
+                    return;
 
-                var response = context.Response;
-                string responseString = "Error happened";
-
-                if (controller != string.Empty && controllers.ContainsKey (controller)) {
-                    responseString = controllers [controller].Parse (action, parameters);
-                }
-                
-                var buffer = System.Text.Encoding.UTF8.GetBytes (responseString);
-                response.ContentLength64 = buffer.Length;
-
-                var output = response.OutputStream;
-                output.Write (buffer, 0, buffer.Length);
-
-                Console.WriteLine (output);
-                output.Close ();
-
+                WriteDefaultError(context);
             }
-            web.Stop ();
+            web.Stop();
         }
 
-        private void InitializeControllers () 
+        private static void WriteDefaultError(HttpListenerContext context)
         {
-            controllers.Add (Constants.Controllers.User, userController);
-            controllers.Add (Constants.Controllers.Movie, movieController);
-            controllers.Add (Constants.Controllers.Room, roomController);
-            controllers.Add (Constants.Controllers.Schedule, scheduleController);
-            controllers.Add (Constants.Controllers.Booking, bookingController);
+            var response = context.Response;
+            var responseString = "Error happened";
+
+            var buffer = Encoding.UTF8.GetBytes(responseString);
+            response.ContentLength64 = buffer.Length;
+
+            var output = response.OutputStream;
+            output.Write(buffer, 0, buffer.Length);
+
+            Console.WriteLine(output);
+            output.Close();
+        }
+
+        private bool TryToHandleRequestByController(HttpListenerContext context)
+        {
+            var urlPathAndQuery = context.Request.Url.PathAndQuery;
+
+            foreach (var controller in _controllers)
+            {
+                var routeControllerMatchResult = _routes.MatchController(controller, urlPathAndQuery);
+
+                if (routeControllerMatchResult.IsMatch)
+                {
+                    var controllerInstance = Activator.CreateInstance(controller, BindingFlags.CreateInstance, context);
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void InitializeControllers()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            foreach (var assembly in assemblies)
+            {
+                var types = assembly.GetTypes();
+
+                foreach (var type in types)
+                {
+                    var hasControllerBaseType = false;
+                    var baseType = type.BaseType;
+
+                    while (true)
+                    {
+                        if (baseType != null && baseType == typeof(Controller))
+                        {
+                            hasControllerBaseType = true;
+                            break;
+                        }
+
+                        if (baseType == null)
+                            break;
+
+                        baseType = baseType.BaseType;
+                    }
+
+                    if (hasControllerBaseType && type != typeof(Controller))
+                        _controllers.Add(type);
+                }
+            }
         }
     }
 }
