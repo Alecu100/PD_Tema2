@@ -38,30 +38,79 @@ namespace CinemaRest.Routing
                 }
                 else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Controller)
                 {
-                    var controllerName = controller.Name.ToLower();
-
-                    var controllerNameToCompare = currentRouteSegment.Name ?? segments[i];
-
-                    if (controllerName.EndsWith("controller", StringComparison.InvariantCultureIgnoreCase))
-                        controllerName = controllerName.TrimEnd("controller".ToCharArray());
-
-                    if (string.Compare(controllerNameToCompare, controllerName,
-                            StringComparison.InvariantCultureIgnoreCase) != 0)
+                    if (string.IsNullOrEmpty(currentRouteSegment.Name))
                     {
-                        controllerMatchResult.IsMatch = false;
-                        return controllerMatchResult;
+                        var controllerName = controller.Name.ToLower();
+
+                        var controllerNameToCompare = segments[i];
+
+                        if (controllerName.EndsWith("controller", StringComparison.InvariantCultureIgnoreCase))
+                            controllerName = controllerName.TrimEnd("controller".ToCharArray());
+
+                        if (string.Compare(controllerNameToCompare, controllerName,
+                                StringComparison.InvariantCultureIgnoreCase) != 0)
+                        {
+                            controllerMatchResult.IsMatch = false;
+                            return controllerMatchResult;
+                        }
+                    }
+                    else
+                    {
+                        var controllerName = controller.Name.ToLower();
+
+                        var controllerNameToCompare = currentRouteSegment.Value;
+
+                        if (controllerName.EndsWith("controller", StringComparison.InvariantCultureIgnoreCase))
+                            controllerName = controllerName.TrimEnd("controller".ToCharArray());
+
+                        if (string.Compare(controllerNameToCompare, controllerName,
+                                StringComparison.InvariantCultureIgnoreCase) != 0)
+                        {
+                            controllerMatchResult.IsMatch = false;
+                            return controllerMatchResult;
+                        }
+
+                        if (
+                            string.Compare(currentRouteSegment.Name, segments[i],
+                                StringComparison.InvariantCultureIgnoreCase) != 0)
+                        {
+                            controllerMatchResult.IsMatch = false;
+                            return controllerMatchResult;
+                        }
                     }
                 }
                 else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Action)
                 {
                     var methodInfos = controller.GetMethods(BindingFlags.Public | BindingFlags.NonPublic);
 
-                    var methodName = currentRouteSegment.Name ?? segments[i];
+                    if (string.IsNullOrEmpty(currentRouteSegment.Name))
+                    {
+                        var methodName = currentRouteSegment.Name ?? segments[i];
 
-                    foreach (var methodInfo in methodInfos)
-                        if (string.Compare(methodInfo.Name, methodName, StringComparison.InvariantCultureIgnoreCase) ==
-                            0)
-                            foundMethods.Add(methodInfo);
+                        foreach (var methodInfo in methodInfos)
+                            if (
+                                string.Compare(methodInfo.Name, methodName, StringComparison.InvariantCultureIgnoreCase) ==
+                                0)
+                                foundMethods.Add(methodInfo);
+                    }
+                    else
+                    {
+                        if (
+                            string.Compare(currentRouteSegment.Name, segments[i],
+                                StringComparison.InvariantCultureIgnoreCase) != 0)
+                        {
+                            controllerMatchResult.IsMatch = false;
+                            return controllerMatchResult;
+                        }
+
+
+                        foreach (var methodInfo in methodInfos)
+                            if (
+                                string.Compare(methodInfo.Name, currentRouteSegment.Value,
+                                    StringComparison.InvariantCultureIgnoreCase) ==
+                                0)
+                                foundMethods.Add(methodInfo);
+                    }
                 }
                 else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Ignore)
                 {

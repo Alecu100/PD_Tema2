@@ -9,9 +9,14 @@
             return route;
         }
 
-        public static Route AddDefaultAction(this Route route, string defaultActionName)
+        public static Route AddDefaultAction(this Route route, string defaultActionName, string defaultLiteralName)
         {
-            route.Add(new RouteSegment {Kind = RouteSegmentMatcherKinds.Literal, Name = defaultActionName});
+            route.Add(new RouteSegment
+            {
+                Kind = RouteSegmentMatcherKinds.Literal,
+                Value = defaultActionName,
+                Name = defaultLiteralName
+            });
 
             return route;
         }
@@ -23,9 +28,15 @@
             return route;
         }
 
-        public static Route AddDefaultController(this Route route, string defaultControllerName)
+        public static Route AddDefaultController(this Route route, string defaultControllerName,
+            string defaultLiteralName)
         {
-            route.Add(new RouteSegment {Kind = RouteSegmentMatcherKinds.Controller, Name = defaultControllerName});
+            route.Add(new RouteSegment
+            {
+                Kind = RouteSegmentMatcherKinds.Controller,
+                Value = defaultControllerName,
+                Name = defaultLiteralName
+            });
 
             return route;
         }

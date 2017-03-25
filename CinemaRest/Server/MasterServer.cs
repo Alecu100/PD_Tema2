@@ -43,6 +43,7 @@ namespace CinemaRest.Server
 
         private void InitializeRoutes()
         {
+            
         }
 
         private static void WriteDefaultError(HttpListenerContext context)
