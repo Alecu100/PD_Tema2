@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -71,6 +72,24 @@ namespace CinemaRest.Server
                 {
                     var controllerInstance = Activator.CreateInstance(controller, BindingFlags.CreateInstance, context);
 
+                    var targetMethod = routeControllerMatchResult.Method;
+
+                    var targetParameters = targetMethod.GetParameters();
+
+                    var arguments = new List<object>(targetParameters.Length);
+
+                    for (int i = 0; i < targetParameters.Length; i++)
+                    {
+                        var parameterValue = routeControllerMatchResult.MethodParameters.First(
+                            param =>
+                                string.Equals(param.Name, targetParameters[i].Name,
+                                    StringComparison.InvariantCultureIgnoreCase));
+
+                        arguments[i] = parameterValue.Value;
+                    }
+
+                    targetMethod.Invoke(controllerInstance, arguments.ToArray());
+                    
                     return true;
                 }
             }

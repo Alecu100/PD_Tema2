@@ -2,7 +2,7 @@
 {
     class Constants
     {
-        public const string HostUrl = "http://localhost:8080/";
+        public const string HostUrl = "http://localhost:10000/";
         public const string DateFormat = "dd-MM-YY hh:mm";
 
         public class Controllers 
