@@ -9,7 +9,7 @@ namespace CinemaRest.Routing
     {
         public RouteControllerMatchResult MatchAgainstController(Type controller, string relativeUrl)
         {
-            var segments = relativeUrl.Split('\\', '/');
+            var segments = relativeUrl.Split('\\', '/').Where(segment => !string.IsNullOrWhiteSpace(segment)).ToArray();
 
             var controllerMatchResult = new RouteControllerMatchResult();
 
@@ -81,7 +81,8 @@ namespace CinemaRest.Routing
                 }
                 else if (currentRouteSegment.Kind == RouteSegmentMatcherKinds.Action)
                 {
-                    var methodInfos = controller.GetMethods(BindingFlags.Public | BindingFlags.NonPublic);
+                    var methodInfos =
+                        controller.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
                     if (string.IsNullOrEmpty(currentRouteSegment.Name))
                     {

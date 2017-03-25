@@ -13,7 +13,7 @@
         {
             route.Add(new RouteSegment
             {
-                Kind = RouteSegmentMatcherKinds.Literal,
+                Kind = RouteSegmentMatcherKinds.Action,
                 Value = defaultActionName,
                 Name = defaultLiteralName
             });
@@ -23,7 +23,7 @@
 
         public static Route AddAction(this Route route)
         {
-            route.Add(new RouteSegment {Kind = RouteSegmentMatcherKinds.Literal});
+            route.Add(new RouteSegment {Kind = RouteSegmentMatcherKinds.Action});
 
             return route;
         }

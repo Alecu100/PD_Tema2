@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using CinemaRest.Controllers;
@@ -97,7 +96,8 @@ namespace CinemaRest.Server
 
                 if (routeControllerMatchResult.IsMatch)
                 {
-                    var controllerInstance = Activator.CreateInstance(controller, BindingFlags.CreateInstance, context);
+                    var controllerInstance = Activator.CreateInstance(controller,
+                        context);
 
                     var targetMethod = routeControllerMatchResult.Method;
 
