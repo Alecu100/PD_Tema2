@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using CinemaRest.Controllers;
 using CinemaRest.Helpers;
 using CinemaRest.Routing;
@@ -13,7 +14,14 @@ namespace CinemaRest.Server
     internal class MasterServer
     {
         private readonly List<Type> _controllers = new List<Type>();
+
         private readonly RouteCollection _routes = new RouteCollection();
+
+        private HttpListener _httpListener;
+
+        private Thread _mainThread;
+
+        private volatile bool _started = false;
 
         public void Start()
         {
@@ -21,24 +29,34 @@ namespace CinemaRest.Server
 
             InitializeRoutes();
 
-            var web = new HttpListener();
+            _httpListener = new HttpListener();
 
-            web.Prefixes.Add(Constants.HostUrl);
+            _httpListener.Prefixes.Add(Constants.HostUrl);
 
             Console.WriteLine("Listening..");
 
-            web.Start();
-            while (true)
-            {
-                var context = web.GetContext();
-                Console.WriteLine("Rq: " + context.Request.Url);
+            _mainThread = new Thread(StartProcessingRequests);
 
-                if (TryToHandleRequestByController(context))
-                    return;
+            _httpListener.Start();
 
-                WriteDefaultError(context);
-            }
-            web.Stop();
+            _mainThread.Start();
+        }
+
+        private void StartProcessingRequests()
+        {
+            while (_started)
+                ThreadPool.QueueUserWorkItem(ProcessRequest, _httpListener.GetContext());
+        }
+
+        private void ProcessRequest(object o)
+        {
+            var context = (HttpListenerContext) o;
+            Console.WriteLine("Rq: " + context.Request.Url);
+
+            if (TryToHandleRequestByController(context))
+                return;
+
+            WriteDefaultError(context);
         }
 
         private void InitializeRoutes()
