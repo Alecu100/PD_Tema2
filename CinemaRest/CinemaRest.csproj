@@ -46,10 +46,10 @@
   <ItemGroup>
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\BookingController.cs" />
-    <Compile Include="Controllers\MovieController.cs" />
-    <Compile Include="Controllers\RoomController.cs" />
-    <Compile Include="Controllers\ScheduleController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\MoviesController.cs" />
+    <Compile Include="Controllers\RoomsController.cs" />
+    <Compile Include="Controllers\SchedulesController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\PersistenceCodes.cs" />
     <Compile Include="Helpers\UrlResolver.cs" />
