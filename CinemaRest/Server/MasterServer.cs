@@ -21,7 +21,7 @@ namespace CinemaRest.Server
 
         private Thread _mainThread;
 
-        private volatile bool _started = false;
+        private volatile bool _started;
 
         public void Start()
         {
@@ -35,6 +35,8 @@ namespace CinemaRest.Server
 
             Console.WriteLine("Listening..");
 
+            _started = true;
+
             _mainThread = new Thread(StartProcessingRequests);
 
             _httpListener.Start();
@@ -46,6 +48,12 @@ namespace CinemaRest.Server
         {
             while (_started)
                 ThreadPool.QueueUserWorkItem(ProcessRequest, _httpListener.GetContext());
+        }
+
+        public void Stop()
+        {
+            _started = false;
+            _mainThread.Abort();
         }
 
         private void ProcessRequest(object o)

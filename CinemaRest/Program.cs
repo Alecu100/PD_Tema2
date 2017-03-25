@@ -2,21 +2,23 @@
 using CinemaRest.Helpers;
 using CinemaRest.Server;
 
-namespace CinemaRest 
+namespace CinemaRest
 {
-    class Program 
+    internal class Program
     {
-        static void Main (string [] args) 
+        private static void Main(string[] args)
         {
-            MasterServer server = new MasterServer ();
+            var server = new MasterServer();
 
-            server.Start ();
+            server.Start();
 
             Console.WriteLine("Listening on adress:  " + Constants.HostUrl);
 
             Console.WriteLine("Press any key to stop server");
 
             Console.ReadKey();
+
+            server.Stop();
         }
     }
 }
