@@ -43,7 +43,7 @@ namespace CinemaRest.Server
 
         private void InitializeRoutes()
         {
-            
+            _routes.AddNewRoute().AddController().AddDefaultAction("GetAll", "all");
         }
 
         private static void WriteDefaultError(HttpListenerContext context)
@@ -79,7 +79,7 @@ namespace CinemaRest.Server
 
                     var arguments = new List<object>(targetParameters.Length);
 
-                    for (int i = 0; i < targetParameters.Length; i++)
+                    for (var i = 0; i < targetParameters.Length; i++)
                     {
                         var parameterValue = routeControllerMatchResult.MethodParameters.First(
                             param =>
@@ -90,7 +90,7 @@ namespace CinemaRest.Server
                     }
 
                     targetMethod.Invoke(controllerInstance, arguments.ToArray());
-                    
+
                     return true;
                 }
             }

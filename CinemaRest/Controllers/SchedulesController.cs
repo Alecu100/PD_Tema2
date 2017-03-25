@@ -7,5 +7,9 @@ namespace CinemaRest.Controllers
         public SchedulesController(HttpListenerContext context) : base(context)
         {
         }
+
+        public void GetAll()
+        {
+        }
     }
 }

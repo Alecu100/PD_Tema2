@@ -7,5 +7,10 @@ namespace CinemaRest.Controllers
         public MoviesController(HttpListenerContext context) : base(context)
         {
         }
+
+        public void GetAll()
+        {
+            
+        }
     }
 }

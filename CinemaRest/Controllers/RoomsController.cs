@@ -7,5 +7,9 @@ namespace CinemaRest.Controllers
         public RoomsController(HttpListenerContext context) : base(context)
         {
         }
+
+        public void GetAll()
+        {
+        }
     }
 }

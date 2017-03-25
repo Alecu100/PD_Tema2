@@ -7,5 +7,9 @@ namespace CinemaRest.Controllers
         public BookingController(HttpListenerContext context) : base(context)
         {
         }
+
+        public void GetAll()
+        {
+        }
     }
 }
