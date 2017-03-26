@@ -1,8 +1,7 @@
 ﻿namespace CinemaRest.Models 
 {
-    class MovieModel 
+    class MovieModel : BaseModel
     {
-        public string ID { get; set; }
         public string Name { get; set; }
     }
 }

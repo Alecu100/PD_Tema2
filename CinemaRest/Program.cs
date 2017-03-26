@@ -1,6 +1,7 @@
 ﻿using System;
 using CinemaRest.Helpers;
 using CinemaRest.Server;
+using CinemaRest.Persistence;
 
 namespace CinemaRest
 {
@@ -8,6 +9,8 @@ namespace CinemaRest
     {
         private static void Main(string[] args)
         {
+            Persist.Initialize ();
+
             var server = new MasterServer();
 
             server.Start();
