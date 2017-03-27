@@ -81,7 +81,7 @@
     <Compile Include="Persistence\BasePersistence.cs" />
     <Compile Include="Persistence\BookingPersistence.cs" />
     <Compile Include="Persistence\MoviePersistence.cs" />
-    <Compile Include="Persistence\PersistenceMain.cs" />
+    <Compile Include="Persistence\Persist.cs" />
     <Compile Include="Persistence\RoomPersistence.cs" />
     <Compile Include="Persistence\SchedulePersistence.cs" />
     <Compile Include="Persistence\UserPersistence.cs" />
