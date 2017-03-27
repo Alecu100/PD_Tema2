@@ -7,5 +7,10 @@ namespace CinemaRest.Persistence {
         public override string GetPath () {
             return (Constants.Persistence.Schedules);
         }
+
+        public override string GetFilePrefix()
+        {
+            return Constants.Persistence.Schedule;
+        }
     }
 }

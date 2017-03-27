@@ -1,6 +1,6 @@
-﻿namespace CinemaRest.Models 
+﻿namespace CinemaRest.Models
 {
-    class ScheduleModel : BaseModel
+    public class ScheduleModel : BaseModel
     {
         public string MovieID { get; set; }
         public string RoomID { get; set; }

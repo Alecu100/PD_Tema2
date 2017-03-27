@@ -1,12 +1,18 @@
 ﻿using CinemaRest.Helpers;
 using CinemaRest.Models;
 
-namespace CinemaRest.Persistence {
-    class UserPersistence : BasePersistence <UserModel>
+namespace CinemaRest.Persistence
+{
+    internal class UserPersistence : BasePersistence<UserModel>
     {
-        public override string GetPath () 
+        public override string GetPath()
         {
-            return (Constants.Persistence.Users);
+            return Constants.Persistence.Users;
+        }
+
+        public override string GetFilePrefix()
+        {
+            return Constants.Persistence.User;
         }
     }
 }

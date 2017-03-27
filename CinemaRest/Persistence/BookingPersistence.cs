@@ -1,12 +1,18 @@
 ﻿using CinemaRest.Helpers;
 using CinemaRest.Models;
-using System.Collections.Generic;
 
-namespace CinemaRest.Persistence {
-    class BookingPersistence : BasePersistence <BookingModel>
+namespace CinemaRest.Persistence
+{
+    internal class BookingPersistence : BasePersistence<BookingModel>
     {
-        public override string GetPath () {
-            return (Constants.Persistence.Bookings);
+        public override string GetPath()
+        {
+            return Constants.Persistence.Bookings;
+        }
+
+        public override string GetFilePrefix()
+        {
+            return Constants.Persistence.Booking;
         }
     }
 }

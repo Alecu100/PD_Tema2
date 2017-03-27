@@ -1,5 +1,6 @@
-﻿namespace CinemaRest.Models {
-    class BaseModel 
+﻿namespace CinemaRest.Models
+{
+    public class BaseModel
     {
         public string ID;
     }

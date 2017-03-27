@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -115,7 +116,23 @@ namespace CinemaRest.Server
                         arguments[i] = parameterValue.Value;
                     }
 
-                    targetMethod.Invoke(controllerInstance, arguments.ToArray());
+                    var result = targetMethod.Invoke(controllerInstance, arguments.ToArray());
+
+                    if (result != null && result is ActionResult)
+                    {
+                        var actionResult = (ActionResult) result;
+                        var streamWriter = new StreamWriter(context.Response.OutputStream);
+                        streamWriter.Write(actionResult.Data);
+                        context.Response.StatusCode = actionResult.StatusCode;
+                        context.Response.ContentType = actionResult.ContentType;
+                        context.Response.ContentEncoding = Encoding.UTF8;
+                    }
+                    else
+                    {
+                        context.Response.StatusCode = 200;
+                    }
+
+                    context.Response.Close();
 
                     return true;
                 }

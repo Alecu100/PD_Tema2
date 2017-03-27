@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace CinemaRest.Controllers
 {
@@ -9,6 +11,24 @@ namespace CinemaRest.Controllers
         protected Controller(HttpListenerContext context)
         {
             _context = context;
+        }
+
+        protected JsonActionResult Json(object data)
+        {
+            var jsonActionResult = new JsonActionResult();
+            var serializer = new JsonSerializer();
+            var stringWriter = new StringWriter();
+            var jsonTextWriter = new JsonTextWriter(stringWriter);
+
+            serializer.Serialize(jsonTextWriter, data);
+            jsonActionResult.Data = stringWriter.GetStringBuilder().ToString();
+
+            return jsonActionResult;
+        }
+
+        protected ErrorActionResult Error()
+        {
+            return new ErrorActionResult();
         }
     }
 }

@@ -63,8 +63,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ActionResult.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\BookingController.cs" />
+    <Compile Include="Controllers\ErrorActionResult.cs" />
+    <Compile Include="Controllers\JsonActionResult.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
     <Compile Include="Controllers\RoomsController.cs" />
     <Compile Include="Controllers\SchedulesController.cs" />
