@@ -1,12 +1,12 @@
 ﻿using CinemaRest.Helpers;
 
-namespace CinemaRest.Controllers
+namespace CinemaRest.Controllers.ActionResults
 {
     public class ErrorActionResult : ActionResult
     {
         public override string ContentType
         {
-            get { return Constants.ErrorContentType; }
+            get { return Constants.DefaultContentType; }
         }
 
         public override int StatusCode

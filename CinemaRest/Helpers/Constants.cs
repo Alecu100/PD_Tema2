@@ -2,7 +2,7 @@
 {
     public class Constants
     {
-        public const string ErrorContentType = "text/plain";
+        public const string DefaultContentType = "text/plain";
         public const string HostUrl = "http://localhost:10000/";
         public const string DateFormat = "dd-MM-YY hh:mm";
 

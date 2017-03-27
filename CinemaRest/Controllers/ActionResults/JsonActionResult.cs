@@ -1,6 +1,6 @@
 ﻿using CinemaRest.Helpers;
 
-namespace CinemaRest.Controllers
+namespace CinemaRest.Controllers.ActionResults
 {
     public class JsonActionResult : ActionResult
     {

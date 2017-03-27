@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net;
+using CinemaRest.Controllers.ActionResults;
 using Newtonsoft.Json;
 
 namespace CinemaRest.Controllers
@@ -29,6 +30,11 @@ namespace CinemaRest.Controllers
         protected ErrorActionResult Error()
         {
             return new ErrorActionResult();
+        }
+
+        protected OkActionResult Ok()
+        {
+            return new OkActionResult();
         }
     }
 }

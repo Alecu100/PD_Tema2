@@ -1,4 +1,4 @@
-﻿namespace CinemaRest.Controllers
+﻿namespace CinemaRest.Controllers.ActionResults
 {
     public abstract class ActionResult
     {

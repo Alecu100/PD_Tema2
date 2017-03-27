@@ -63,11 +63,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\ActionResult.cs" />
+    <Compile Include="Controllers\ActionResults\ActionResult.cs" />
+    <Compile Include="Controllers\ActionResults\OkActionResult.cs" />
+    <Compile Include="Controllers\Authorization\RequiredHttpDeleteAttribute.cs" />
+    <Compile Include="Controllers\Authorization\RequiredHttpGetAttribute.cs" />
+    <Compile Include="Controllers\Authorization\RequiredHttpMethodAttribute.cs" />
+    <Compile Include="Controllers\Authorization\RequiredHttpPostAttribute.cs" />
+    <Compile Include="Controllers\Authorization\RequiredHttpPutAttribute.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\BookingController.cs" />
-    <Compile Include="Controllers\ErrorActionResult.cs" />
-    <Compile Include="Controllers\JsonActionResult.cs" />
+    <Compile Include="Controllers\ActionResults\ErrorActionResult.cs" />
+    <Compile Include="Controllers\ActionResults\JsonActionResult.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
     <Compile Include="Controllers\RoomsController.cs" />
     <Compile Include="Controllers\SchedulesController.cs" />

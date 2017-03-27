@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
 using CinemaRest.Controllers;
+using CinemaRest.Controllers.ActionResults;
+using CinemaRest.Controllers.Authorization;
 using CinemaRest.Helpers;
 using CinemaRest.Routing;
 
@@ -70,6 +71,9 @@ namespace CinemaRest.Server
         private void InitializeRoutes()
         {
             _routes.AddNewRoute().AddController().AddDefaultAction("GetAll", "all");
+            _routes.AddNewRoute().AddController().AddDefaultAction("Add", "add");
+            _routes.AddNewRoute().AddController().AddDefaultAction("Get", "get").AddLiteral("id").AddParameter("id");
+            _routes.AddNewRoute().AddController().AddAction().AddLiteral("id").AddParameter("id");
         }
 
         private static void WriteDefaultError(HttpListenerContext context)
@@ -104,7 +108,31 @@ namespace CinemaRest.Server
 
                     var targetParameters = targetMethod.GetParameters();
 
+                    var customAttributes = targetMethod.GetCustomAttributes(typeof(RequiredHttpMethodAttribute), true);
+
+                    if (customAttributes.Length > 0)
+                    {
+                        var requiredHttpMethodAttributes = customAttributes.Cast<RequiredHttpMethodAttribute>();
+
+                        if (
+                            requiredHttpMethodAttributes.All(
+                                attribute =>
+                                    string.Compare(attribute.HttpMethod, context.Request.HttpMethod,
+                                        StringComparison.Ordinal) != 0))
+                        {
+                            context.Response.StatusCode = 405;
+                            context.Response.Close();
+
+                            return true;
+                        }
+                    }
+
                     var arguments = new List<object>(targetParameters.Length);
+
+                    for (var i = 0; i < targetParameters.Length; i++)
+                    {
+                        arguments.Add(null);
+                    }
 
                     for (var i = 0; i < targetParameters.Length; i++)
                     {
@@ -121,8 +149,14 @@ namespace CinemaRest.Server
                     if (result != null && result is ActionResult)
                     {
                         var actionResult = (ActionResult) result;
-                        var streamWriter = new StreamWriter(context.Response.OutputStream);
-                        streamWriter.Write(actionResult.Data);
+
+                        if (!string.IsNullOrEmpty(actionResult.Data))
+                        {
+                            var buffer = Encoding.UTF8.GetBytes(actionResult.Data);
+                            context.Response.ContentLength64 = buffer.LongLength;
+                            context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+                        }
+
                         context.Response.StatusCode = actionResult.StatusCode;
                         context.Response.ContentType = actionResult.ContentType;
                         context.Response.ContentEncoding = Encoding.UTF8;
